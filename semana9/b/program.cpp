@@ -5,11 +5,11 @@ using ll = long long;
 int n, m;
 const int N = 1e5+15;
 vector<vector<int>> graph(N);
-vector<bool> visited(N);
+vector<bool> visited(N, false);
 vector<int> childNodes(N, 0);
 vector<int> lastSource(N, -1);
 
-ll tk, bridges;
+int nodesMoreFonts = 0;
 
 void dfs(int u, int p, int source){
     visited[u] = true;
@@ -18,6 +18,9 @@ void dfs(int u, int p, int source){
         if(!visited[v]){
             if(lastSource[v] != source){
                 childNodes[v]++;
+                if(childNodes[v] == 2){
+                    nodesMoreFonts++;
+                }
             }
             lastSource[v] = source;
             dfs(v, u, source);
@@ -32,13 +35,11 @@ int main() {
 
     cin >> n >> m;
 
-    visited.assign(n, false);
     int u, v;
     vector<bool> sources(n+1, true);
     for(ll i = 0; i < m; i++){
         cin >> u >> v;
-        u--;
-        v--;
+        u--; v--;
         (graph[u]).push_back(v);
         sources[v] = false;    
     }
@@ -50,14 +51,5 @@ int main() {
         }
     }
 
-    int max = 1;
-    for(int i = 0; i < n; i++){
-        if(childNodes[i] > max)
-            max = childNodes[i];
-    }
-    
-    if(max > 1)
-        cout << max << "\n";
-    else
-        cout << "0\n";
+    cout << nodesMoreFonts << "\n";
 }

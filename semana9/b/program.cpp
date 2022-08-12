@@ -6,24 +6,23 @@ int n, m;
 const int N = 1e5+15;
 vector<vector<int>> graph(N);
 vector<bool> visited(N, false);
-vector<int> childNodes(N, 0);
+vector<int> sourcesOfNode(N, 0);
 vector<int> lastSource(N, -1);
 
 int nodesMoreFonts = 0;
 
 void dfs(int u, int p, int source){
     visited[u] = true;
-    for(auto v : graph[u]){
-        if(v == p) continue;
-        if(!visited[v]){
-            if(lastSource[v] != source){
-                childNodes[v]++;
-                if(childNodes[v] == 2){
-                    nodesMoreFonts++;
-                }
+    sourcesOfNode[u]++;
+    if(sourcesOfNode[u] == 2){
+        nodesMoreFonts++;
+    }
+    if (sourcesOfNode[u] <= 2){
+        for(auto v : graph[u]){
+            if(v == p) continue;
+            if(!visited[v]){
+                dfs(v, u, source);
             }
-            lastSource[v] = source;
-            dfs(v, u, source);
         }
     }
 }
